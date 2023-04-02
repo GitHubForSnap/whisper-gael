@@ -1,0 +1,60 @@
+name: whisper-gael
+base: core22
+version: "v20230314"
+summary: OpenAI Whisper
+description: |
+  _This is NOT an original piece of work, just a snap of OpenAI Whisper_
+
+  Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitasking model that can perform multilingual speech recognition, speech translation, and language identification.
+
+grade: stable
+confinement: strict
+
+compression: xz
+
+architectures:
+  - build-on: amd64
+
+license: "MIT"
+
+apps:
+  whisper:
+    command: bin/whisper
+    environment:
+      PYTHONPATH: $SNAP/usr/lib/python3.10:$SNAP/usr/lib/python3.10/lib-dynload:$SNAP/lib/python3.10/site-packages
+      LD_LIBRARY_PATH: /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/pulseaudio:$SNAP/usr/lib/x86_64-linux-gnu/blas:$SNAP/usr/lib/x86_64-linux-gnu/lapack
+    plugs:
+      - home
+      - network
+      - opengl
+
+parts:
+  whisper:
+    plugin: python
+    source: https://github.com/openai/whisper.git
+    source-type: git
+    source-tag: "v20230314"
+    python-requirements:
+      - requirements.txt
+    stage-packages:
+      - libgomp1
+      - nvidia-cuda-dev
+      - libtbb2
+    stage:
+      - -etc
+      - -include
+      - -share
+    override-prime: |
+      craftctl default
+
+      cd $CRAFT_PRIME/usr/lib/x86_64-linux-gnu
+      ln -sf libtbb.so.2 libtbb.so.12
+
+  ffmpeg:
+    plugin: nil
+    stage-packages:
+      - ffmpeg
+      - libglu1-mesa
+      - freeglut3
+      - libpulse0
+
