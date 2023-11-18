@@ -16,6 +16,9 @@ Whisper is a general-purpose speech recognition model. It is trained on a large 
 
 * Example: `whisper-gael.whisper --model small --output_format txt --task transcribe audio.mp3`
 
+**2023-11-18**
+* v20231117 available on amd64
+
 **2023-11-06**
 * v20231106 available on amd64
 

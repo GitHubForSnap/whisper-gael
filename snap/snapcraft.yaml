@@ -1,6 +1,6 @@
 name: whisper-gael
 base: core22
-version: "v20231106"
+version: "v20231117"
 summary: OpenAI Whisper
 description: |
   _This is NOT an original piece of work, just a snap of OpenAI Whisper_
@@ -33,7 +33,7 @@ parts:
     plugin: python
     source: https://github.com/openai/whisper.git
     source-type: git
-    source-tag: "v20231106"
+    source-tag: "v20231117"
     python-requirements:
       - requirements.txt
     stage-packages:
