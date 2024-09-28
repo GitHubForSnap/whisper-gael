@@ -1,7 +1,7 @@
 name: whisper-gael
 base: core22
-version: "v20231117"
-summary: OpenAI Whisper
+version: "v20240927"
+summary: OpenAI Whisper (CPU only)
 description: |
   _This is NOT an original piece of work, just a snap of OpenAI Whisper_
 
@@ -22,39 +22,58 @@ apps:
     command: bin/whisper
     environment:
       PYTHONPATH: $SNAP/usr/lib/python3.10:$SNAP/usr/lib/python3.10/lib-dynload:$SNAP/lib/python3.10/site-packages
-      LD_LIBRARY_PATH: /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void:$SNAP/lib:$SNAP/usr/lib:$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/pulseaudio:$SNAP/usr/lib/x86_64-linux-gnu/blas:$SNAP/usr/lib/x86_64-linux-gnu/lapack
     plugs:
       - home
       - network
-      - opengl
 
 parts:
   whisper:
     plugin: python
     source: https://github.com/openai/whisper.git
     source-type: git
-    source-tag: "v20231117"
+    source-tag: "v20240927"
+
     python-requirements:
       - requirements.txt
+
     stage-packages:
       - libgomp1
-      - nvidia-cuda-dev
       - libtbb2
+      - sox
+
+    override-pull: |
+      craftctl default
+
+      # https://pytorch.org/get-started/locally/
+      sed -i 's/torch//g' requirements.txt
+
+    override-build: |
+      craftctl default
+
+      # https://pytorch.org/get-started/locally/
+      pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
     stage:
       - -etc
       - -include
       - -share
+
     override-prime: |
       craftctl default
 
       cd $CRAFT_PRIME/usr/lib/x86_64-linux-gnu
       ln -sf libtbb.so.2 libtbb.so.12
+      ln -sf libsox.so.3.0.0 libsox.so
 
+  # Use ffmpeg static build
   ffmpeg:
-    plugin: nil
-    stage-packages:
-      - ffmpeg
-      - libglu1-mesa
-      - freeglut3
-      - libpulse0
-
+    plugin: dump
+    source: https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+    organize:
+      ffmpeg: bin/ffmpeg
+      model: usr/local/share/model
+    prime:
+      - -ffprobe
+      - -manpages
+      - -qt-faststart
+      - -readme.txt

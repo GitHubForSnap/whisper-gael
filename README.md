@@ -2,6 +2,8 @@
 
 _This is NOT an original piece of work, just a snap of OpenAI Whisper_
 
+OpenAI Whisper (CPU only)
+
 Whisper is a general-purpose speech recognition model. It is trained on a large dataset of diverse audio and is also a multitasking model that can perform multilingual speech recognition, speech translation, and language identification.
 
 **Create an alias for ease of use (optional)**
@@ -15,6 +17,10 @@ Whisper is a general-purpose speech recognition model. It is trained on a large 
 * Usage: `whisper-gael.whisper --help`
 
 * Example: `whisper-gael.whisper --model small --output_format txt --task transcribe audio.mp3`
+
+**2024-09-28**
+* v20240927 available on amd64
+* Streamlined to only keep the CPU version
 
 **2023-11-18**
 * v20231117 available on amd64
