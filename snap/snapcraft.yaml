@@ -1,6 +1,6 @@
 name: whisper-gael
 base: core22
-version: "v20240930"
+version: "v20250625"
 summary: OpenAI Whisper (CPU only)
 description: |
   _This is NOT an original piece of work, just a snap of OpenAI Whisper_
